@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Page Using Vue, Marisa Trie, and FastAPI</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Styling the suggestions dropdown */
+        .suggestions-box {
+            position: absolute;
+            width: 100%;
+            background: white;
+            border: 1px solid #ccc;
+            border-top: none;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+        .suggestions-box p {
+            padding: 8px;
+            margin: 0;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .suggestions-box p:hover {
+            background: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Vue App Wrapper -->
+    <div id="app">
+        <div class="container d-flex justify-content-center align-items-center" style="height: 100vh;">
+            <form class="w-50 position-relative">
+                <h1 class="mb-3 text-center">Search any word for prefix search</h1>
+                <div class="form-group">
+                    <input 
+                        v-model="keyword" 
+                        type="text" 
+                        class="form-control" 
+                        placeholder="Search..." 
+                        required
+                        @input="search"
+                        @keydown.down="highlightNext"
+                        @keydown.up="highlightPrev"
+                        @keydown.enter.prevent="selectHighlighted"
+                    >
+                    <!-- Show suggestions in a floating box -->
+                    <div v-if="suggestions.length > 0" class="suggestions-box">
+                        <p v-for="(suggestion, index) in suggestions" 
+                           :key="index"
+                           @click="selectSuggestion(suggestion)"
+                           :class="{'bg-light': index === highlightedIndex}">
+                            {{ suggestion }}
+                        </p>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="/static/app.js"></script>
+</body>
+</html>
